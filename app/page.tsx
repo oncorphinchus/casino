@@ -1,7 +1,35 @@
+'use client';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useUser } from '@/app/context/UserContext';
+import LoginForm from '@/app/components/LoginForm';
+
+export function GameCard({ title, description, href }: { title: string; description: string; href: string }) {
+  return (
+    <Link href={href}>
+      <motion.div 
+        whileHover={{ scale: 1.05 }}
+        className="bg-zinc-900 p-6 rounded-2xl cursor-pointer"
+      >
+        <h3 className="text-2xl font-semibold mb-3">{title}</h3>
+        <p className="text-gray-400">{description}</p>
+      </motion.div>
+    </Link>
+  );
+}
 
 export default function Home() {
+  const { user } = useUser();
+
+  if (!user) {
+    return (
+      <main className="min-h-screen pt-32">
+        <LoginForm />
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen">
       <nav className="backdrop-blur-lg bg-black/30 fixed w-full z-50">
@@ -48,19 +76,5 @@ export default function Home() {
         </div>
       </section>
     </main>
-  );
-}
-
-function GameCard({ title, description, href }: { title: string; description: string; href: string }) {
-  return (
-    <Link href={href}>
-      <motion.div 
-        whileHover={{ scale: 1.05 }}
-        className="bg-zinc-900 p-6 rounded-2xl cursor-pointer"
-      >
-        <h3 className="text-2xl font-semibold mb-3">{title}</h3>
-        <p className="text-gray-400">{description}</p>
-      </motion.div>
-    </Link>
   );
 }

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { SF_Pro_Display } from "next/font/google";
+import { Inter } from 'next/font/google'
 import "./globals.css";
+import { CurrencyProvider } from './context/CurrencyContext';
+import { UserProvider } from './context/UserContext';
 
-const sfPro = SF_Pro_Display({
-  subsets: ["latin"],
-  variable: "--font-sf-pro",
-});
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "iCasino - Premium Gaming Experience",
@@ -14,14 +13,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className={`${sfPro.variable} font-sf-pro bg-black text-white`}>
-        {children}
+    <html lang="en" className={inter.className}>
+      <body>
+        <UserProvider>
+          <CurrencyProvider>
+            {children}
+          </CurrencyProvider>
+        </UserProvider>
       </body>
     </html>
-  );
+  )
 }
