@@ -78,4 +78,33 @@ async function hashPassword(password: string): Promise<string> {
 async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
   const hashed = await hashPassword(password);
   return hashed === hashedPassword;
+}
+
+export async function updateUserBalance(username: string, newBalance: number): Promise<boolean> {
+  try {
+    // Get current user data
+    const response = await s3Client.send(
+      new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: `users/${username}.json`
+      })
+    );
+
+    const userData = JSON.parse(await response.Body!.transformToString());
+    userData.balance = newBalance;
+
+    // Update user data in S3
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: `users/${username}.json`,
+        Body: JSON.stringify(userData),
+        ContentType: 'application/json'
+      })
+    );
+    return true;
+  } catch (error) {
+    console.error('Error updating balance:', error);
+    return false;
+  }
 } 

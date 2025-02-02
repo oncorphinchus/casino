@@ -14,6 +14,7 @@ interface UserContextType {
   register: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   error: string | null;
+  updateUserData: (userData: User) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -48,8 +49,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setError(null);
   };
 
+  const updateUserData = (userData: User) => {
+    setUser(userData);
+  };
+
   return (
-    <UserContext.Provider value={{ user, login, register, logout, error }}>
+    <UserContext.Provider value={{ user, login, register, logout, error, updateUserData }}>
       {children}
     </UserContext.Provider>
   );
